@@ -2,12 +2,11 @@ package main;
 
 import model.Histogram;
 import model.Mail;
-import view.Attribute;
-import view.HistogramBuilder;
-import view.HistogramDisplay;
-import view.MailListReader;
+import model.Person;
+import view.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Kata6 {
@@ -15,9 +14,13 @@ public class Kata6 {
     Histogram<String> histogram;
     Histogram<String> domains;
     Histogram<Character> letters;
+    Histogram<Character> gender;
+    Histogram<Float> weight;
+
+    List <Person> people;
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         Kata6 kata6 =new Kata6();
         kata6.execute();
     }
@@ -27,8 +30,7 @@ public class Kata6 {
         mailList= MailListReader.read(filename);
     }
 
-    private void process(){
-        //histogram = HistogramBuilder.build(mailList);
+    private void process() throws SQLException, IOException, ClassNotFoundException {
         HistogramBuilder<Mail> builder= new HistogramBuilder<>(mailList);
 
          domains= builder.build(new Attribute<Mail, String>() {
@@ -44,18 +46,35 @@ public class Kata6 {
                  return item.getMail().charAt(0);
              }
          });
+
+        people= DataBaseList.read();
+        HistogramBuilder<Person> builderPerson=new HistogramBuilder<>(people);
+
+         gender = builderPerson.build(new Attribute<Person,Character>(){
+             @Override
+             public Character get(Person item){
+                 return item.getGender();
+             }
+         });
+
+         weight=builderPerson.build(new Attribute<Person, Float>() {
+             @Override
+             public Float get(Person item) {
+                 return item.getWeight();
+             }
+         });
     }
 
     private void output(){
         //HistogramDisplay histoDisplay= new HistogramDisplay(histogram);
-
         new HistogramDisplay(domains,"Dominios").execute();
         new HistogramDisplay(letters,"Primer Caracter").execute();
-
+        new HistogramDisplay(gender,"Gender").execute();
+        new HistogramDisplay(weight,"Weight").execute();
         //histoDisplay.execute();
     }
 
-    private void execute() throws IOException {
+    private void execute() throws IOException, SQLException, ClassNotFoundException {
         input();
         process();
         output();
