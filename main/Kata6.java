@@ -9,17 +9,17 @@ import view.MailListReader;
 import java.io.IOException;
 import java.util.List;
 
-public class Kata4 {
+public class Kata6 {
     public List<Mail> mailList;
     Histogram<String> histogram;
 
     public static void main(String[] args) throws IOException {
-        Kata4 kata4=new Kata4();
-        kata4.execute();
+        Kata6 kata6 =new Kata6();
+        kata6.execute();
     }
 
     private void input() throws IOException {
-        String filename ="C:\\Users\\ADRIELGARCÍADÍAZ\\IdeaProjects\\Kata4\\emails.txt";
+        String filename ="/home/jackdar/IdeaProjects/Kata6/emails.txt";
         mailList= MailListReader.read(filename);
     }
 
@@ -29,6 +29,7 @@ public class Kata4 {
 
     private void output(){
         HistogramDisplay histoDisplay= new HistogramDisplay(histogram);
+        histoDisplay.execute();
     }
 
     private void execute() throws IOException {
